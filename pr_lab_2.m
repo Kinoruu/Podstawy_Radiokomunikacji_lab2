@@ -1,7 +1,7 @@
 d_max = 2.8;         %d³ugoœæ pokoju
 s_max = 2.6;         %szerokoœæ pokoju
 h_max = 2.6;         %wysokoœæ pokoju
-d = [1:0.05:2.6];    %zakres
+d = [1:0.02:2.6];    %zakres
 a = -0.5;            %wspó³czynnik odbicia
 %%%%%%%%%%%%%%%%%  LOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 flos = -2 * pi * 3.6 * 10^9 *(d./3*10^8);
@@ -13,6 +13,9 @@ prpolos = (abs(prpo)).^2;
 semilogx(d, prpolos)
 grid
 grid minor
+title('Wzglêdny spadek mocy dla œcie¿ki LOS')
+xlabel('Odleg³oœæ [m]');
+ylabel('Moc [dB]');
 %%%%%%%%%  Pojedyncze odbicie + LOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dsc = hypot(d, s_max);
 dsu = hypot(d, h_max);
@@ -33,6 +36,9 @@ figure
 semilogx(d, sumaprpo1)
 grid
 grid minor
+title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek pojedynczego odbicia')
+xlabel('Odleg³oœæ [m]');
+ylabel('Moc [dB]');
 %%%%%%%%%  Pojedyncze, podówjne odbicie + LOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dscsc = hypot(d, 2 * s_max); %œciana œciana
 dsupo = hypot(d, 2 * h_max); %sufit pod³oga / pod³oga sufit
@@ -54,6 +60,9 @@ figure
 semilogx(d, sumaprpo2)
 grid
 grid minor
+title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek pojedynczego oraz podwójnego odbicia')
+xlabel('Odleg³oœæ [m]');
+ylabel('Moc [dB]');
 %%%%  Pojedyncze, podówjne i potrójne odbicie + LOS  %%%%%%%%%%%%%%%%%%%%%%
 dscscsc = hypot(d, 3 * s_max); %œciana œciana œciana
 dsuposu = hypot(d, 3 * h_max); %sufit pod³oga sufit/ pod³oga sufit pod³oga
@@ -76,6 +85,9 @@ figure
 semilogx(d, sumaprpo3)
 grid
 grid minor
+title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek pojedynczego, podwójnego oraz potrójnego odbicia')
+xlabel('Odleg³oœæ [m]');
+ylabel('Moc [dB]');
 %%%%%%%%%%%  Wspólny wykres  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure
 hold on
@@ -86,12 +98,16 @@ semilogx(d, sumaprpo3)
 grid
 grid minor
 hold off
+title('Porównanie wzglêdnych spadeków mocy dla kolejnych sum œcie¿ek')
+xlabel('Odleg³oœæ [m]');
+ylabel('Moc [dB]');
+legend('LOS','LOS + 1','LOS + 1 + 2','LOS + 1 + 2 + 3')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for n = 0:3
     if n == 0
         flos = -2 * pi * 3.6 * 10^9 *(d./3*10^8);
         prpolos = 1./d;
-        prpo = prpolos;
+        sumaprpo = prpolos;
     else
         dscn = hypot(d, n * s_max);
         dsun = hypot(d, n * h_max);
@@ -105,9 +121,8 @@ for n = 0:3
         prposun = (((a^n) ./ dsun) .* exp(-j .* fTXsuRXn));
         prposcpn = (((a^n) ./ dscpn) .* exp(-j .* fTXscpRXn));
 
-        prpo = ((2 * prposcn) + (2 * prposun) + prposcpn);
+        sumaprpo = sumaprpo + ((2 * prposcn) + (2 * prposun) + prposcpn);
     end
-    sumaprpo = sumaprpo + prpo;
 end
 
 abssumaprpo = (abs(sumaprpo)).^2;
@@ -116,6 +131,9 @@ figure
 semilogx(d, abssumaprpo)
 grid
 grid minor
+title(['Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek do ', num2str(n) ,' odbiæ'])
+xlabel('Odleg³oœæ [m]');
+ylabel('Moc [dB]');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
