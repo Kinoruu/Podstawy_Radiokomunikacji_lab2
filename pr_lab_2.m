@@ -1,13 +1,13 @@
-f = 3.6 * 10^9;      %czêstotliwoœæ
-c = 3 * 10^8;        %prêdkoœæ œwiat³a
-d_max = 2.8;         %d³ugoœæ pokoju
-s_max = 2.6;         %szerokoœæ pokoju
-h_max = 2.6;         %wysokoœæ pokoju
-step1 = 0.02;         %krok obliczeñ dla zadania 1
-step2 = 0.02;         %krok obliczeñ dla zadania 2
-d = [1:step1:d_max];    %zakres dla zadania 1
-sx = [0:step2:(2 * s_max)];    %zakres dla zadania 2
-a = -0.5;            %wspó³czynnik odbicia
+f = 3.6 * 10^9;               %czêstotliwoœæ
+c = 3 * 10^8;                 %prêdkoœæ œwiat³a
+d_max = 2.8;                  %d³ugoœæ pokoju
+s_max = 2.6;                  %szerokoœæ pokoju
+h_max = 2.6;                  %wysokoœæ pokoju
+step1 = 0.02;                 %krok obliczeñ dla zadania 1
+step2 = 0.02;                 %krok obliczeñ dla zadania 2
+d = [1:step1:d_max];          %zakres dla zadania 1
+sx = [0:step2:(2 * s_max)];   %zakres dla zadania 2
+a = -0.5;                     %wspó³czynnik odbicia
 %%%%%%%%%%%%%%%%%  LOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 flos = -2 * pi * f * (d ./ c);
 
@@ -173,7 +173,7 @@ for s = 0:step2:(2 * s_max)
             x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
             fTXpsRXn = -2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-j * fTXpsRXn));
-            prpo2(z) = prpolos + prpops;
+            prpo2(z) = prpolos + (2 * prpops);
         end
     elseif s > (1.0625 * s_max)
         %{
