@@ -12,7 +12,7 @@ h_anten = 1;                  %wysokoœæ anteny
 %%%%%%%%%%%%%%%%%  LOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fTXlosRX = 2 * pi * f * (d ./ c);
 
-prpo = (1 ./ d) .* exp(-j .* fTXlosRX);
+prpo = (1 ./ d) .* exp(-1i .* fTXlosRX);
 
 prpolos = (abs(prpo)) .^ 2;
 
@@ -30,13 +30,13 @@ dscp = (2 * d_max) - d;
 
 fTXscRX = 2 * pi * f * (dsc ./ c); %œciana
 fTXsuRX = 2 * pi * f * (dsu ./ c); %sufit
-fTXpoRX = 2 * pi * f * (dpo ./ c); %sufit
+fTXpoRX = 2 * pi * f * (dpo ./ c); %pod³oga
 fTXscpRX = 2 * pi * f * (dscp ./ c); %œciana w linii LOS
 
-prposc = ((a ./ dsc) .* exp(-j .* fTXscRX));
-prposu = ((a ./ dsu) .* exp(-j .* fTXsuRX));
-prpopo = ((a ./ dsu) .* exp(-j .* fTXpoRX));
-prposcp = ((a ./ dscp) .* exp(-j .* fTXscpRX));
+prposc = ((a ./ dsc) .* exp(-1i .* fTXscRX));
+prposu = ((a ./ dsu) .* exp(-1i .* fTXsuRX));
+prpopo = ((a ./ dsu) .* exp(-1i .* fTXpoRX));
+prposcp = ((a ./ dscp) .* exp(-1i .* fTXscpRX));
 
 sumaprpo1 = (abs(prpo + ...
     prposc + prposc + prposu + prpopo + prposcp)).^2;
@@ -59,9 +59,9 @@ fTXscscRX = 2 * pi * f * (dscsc ./ c); %œciana
 fTXsupoRX = 2 * pi * f * (dsupo ./ c); %sufit
 fTXscscpRX = 2 * pi * f * (dscscp ./ c); %œciana za plecami
 
-prposcsc = (((a * a) ./ dscsc) .* exp(-j .* fTXscscRX));
-prposupo = (((a * a) ./ dsupo) .* exp(-j .* fTXsupoRX));
-prposcscp = (((a * a) ./ dscscp) .* exp(-j .* fTXscscpRX));
+prposcsc = (((a * a) ./ dscsc) .* exp(-1i .* fTXscscRX));
+prposupo = (((a * a) ./ dsupo) .* exp(-1i .* fTXsupoRX));
+prposcscp = (((a * a) ./ dscscp) .* exp(-1i .* fTXscscpRX));
 
 sumaprpo2 = (abs(prpo + ...
     prposc + prposc + prposu + prpopo + prposcp + ...
@@ -85,9 +85,9 @@ fTXscscscRX = 2 * pi * f * (dscscsc ./ c); %œciana
 fTXsuposcRX = 2 * pi * f * (dsuposu ./ c); %sufit
 fTXscscscpRX = 2 * pi * f * (dscscscp ./ c); %œciana za plecami
 
-prposcscsc = (((a * a * a) ./ dscscsc) .* exp(-j .* fTXscscscRX));
-prposuposu = (((a * a * a) ./ dsuposu) .* exp(-j .* fTXsuposcRX));
-prposcscscp = (((a * a * a) ./ dscscscp) .* exp(-j .* fTXscscscpRX));
+prposcscsc = (((a * a * a) ./ dscscsc) .* exp(-1i .* fTXscscscRX));
+prposuposu = (((a * a * a) ./ dsuposu) .* exp(-1i .* fTXsuposcRX));
+prposcscscp = (((a * a * a) ./ dscscscp) .* exp(-1i .* fTXscscscpRX));
 
 sumaprpo3 = (abs(prpo + ...
     prposc + prposc + prposu + prpopo + prposcp + ...
@@ -126,18 +126,18 @@ for n = 0:3
     elseif n == 1
         dscn = hypot(d, (n * s_max));
         dsun = hypot(d, (2 * (h_max - 1)));
-        dpon = hypot (d, (2 * h_anten))
+        dpon = hypot (d, (2 * h_anten));
         dscpn = abs(((n+1) * d_max) - d);
 
         fTXscRXn = 2 * pi * f * (dscn ./ c); %œciana
         fTXsuRXn = 2 * pi * f * (dsun ./ c); %sufit
-        fTXpoRXn = 2 * pi * f * (dpon ./ c);
+        fTXpoRXn = 2 * pi * f * (dpon ./ c); %pod³oga
         fTXscpRXn = 2 * pi * f * (dscpn ./ c); %œciana w linii LOS
 
-        prposcn = (((a^n) ./ dscn) .* exp(-j .* fTXscRXn));
-        prposun = (((a^n) ./ dsun) .* exp(-j .* fTXsuRXn));
-        prposun = (((a^n) ./ dpon) .* exp(-j .* fTXpoRXn));
-        prposcpn = (((a^n) ./ dscpn) .* exp(-j .* fTXscpRXn));
+        prposcn = (((a^n) ./ dscn) .* exp(-1i .* fTXscRXn));
+        prposun = (((a^n) ./ dsun) .* exp(-1i .* fTXsuRXn));
+        prposun = (((a^n) ./ dpon) .* exp(-1i .* fTXpoRXn));
+        prposcpn = (((a^n) ./ dscpn) .* exp(-1i .* fTXscpRXn));
 
         sumaprpo = sumaprpo + ((2 * prposcn) + prposun + prposun + prposcpn);
     else
@@ -149,9 +149,9 @@ for n = 0:3
         fTXsuRXn = 2 * pi * f * (dsun ./ c); %sufit
         fTXscpRXn = 2 * pi * f * (dscpn ./ c); %œciana w linii LOS
 
-        prposcn = (((a^n) ./ dscn) .* exp(-j .* fTXscRXn));
-        prposun = (((a^n) ./ dsun) .* exp(-j .* fTXsuRXn));
-        prposcpn = (((a^n) ./ dscpn) .* exp(-j .* fTXscpRXn));
+        prposcn = (((a^n) ./ dscn) .* exp(-1i .* fTXscRXn));
+        prposun = (((a^n) ./ dsun) .* exp(-1i .* fTXsuRXn));
+        prposcpn = (((a^n) ./ dscpn) .* exp(-1i .* fTXscpRXn));
 
         sumaprpo = sumaprpo + ((2 * prposcn) + (2 * prposun) + prposcpn);
     end
@@ -181,36 +181,36 @@ for s = 0:step2:(2 * s_max)
             prpolos = 1 / (0.9 * d_max);
             x = hypot((0.9 * d_max), s);
             fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-j * fTXpsRXn));
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
             prpo2(z) = prpolos + (2 * prpops);
-            absprpo2(z) = (abs(prpo2(z)))^2
+            absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
         elseif s < (0.5 * s_max)
             los = hypot((0.9 * d_max), ((0.5 * s_max) - s));
             prpolos = 1 / (los);
             x = hypot((0.9 * d_max), (2 * ((0.5 * s_max) - s)));
             fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-j * fTXpsRXn));
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
             prpo2(z) = prpolos + (2 * prpops);
-            absprpo2(z) = (abs(prpo2(z)))^2
+            absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
-        elseif (s > (0.5 * s_max)) & (s < (s_max))
+        elseif (s > (0.5 * s_max)) && (s < (s_max))
             los = hypot((0.9 * d_max), (s - (0.5 * s_max)));
             prpolos = 1 / (los);
             x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
             fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-j * fTXpsRXn));
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
             prpo2(z) = prpolos + (2 * prpops);
-            absprpo2(z) = (abs(prpo2(z)))^2
+            absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
-        elseif (s < (1.0625 * s_max)) & (s >= (s_max))
+        elseif (s < (1.0625 * s_max)) && (s >= (s_max))
             los = hypot((0.9 * d_max), (s - (0.5 * s_max)));
             prpolos = 1 / (los);
             x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
             fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-j * fTXpsRXn));
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
             prpo2(z) = prpolos + (2 * prpops);
-            absprpo2(z) = (abs(prpo2(z)))^2
+            absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
         end
     elseif s >= (1.0625 * s_max)
