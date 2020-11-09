@@ -35,7 +35,7 @@ fTXscpRX = 2 * pi * f * (dscp ./ c); %œciana w linii LOS
 
 prposc = ((a ./ dsc) .* exp(-1i .* fTXscRX));
 prposu = ((a ./ dsu) .* exp(-1i .* fTXsuRX));
-prpopo = ((a ./ dsu) .* exp(-1i .* fTXpoRX));
+prpopo = ((a ./ dpo) .* exp(-1i .* fTXpoRX));
 prposcp = ((a ./ dscp) .* exp(-1i .* fTXscpRX));
 
 sumaprpo1 = (abs(prpo + ...
@@ -178,7 +178,8 @@ for s = 0:step2:(2 * s_max)
     z = fix((s * (1 / step2)) + 1);
     if s < (1.0625 * s_max)
         if s == (0.5 * s_max)
-            prpolos = 1 / (0.9 * d_max);
+            fTXlosRXn = 2 * pi * f * ((0.9 * d_max) / c);
+            prpolos = (1 / (0.9 * d_max)) * exp(-1i * fTXlosRXn);
             x = hypot((0.9 * d_max), s);
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
@@ -187,7 +188,8 @@ for s = 0:step2:(2 * s_max)
             logprpo2(z) = (10 * log10(absprpo2(z)));
         elseif s < (0.5 * s_max)
             los = hypot((0.9 * d_max), ((0.5 * s_max) - s));
-            prpolos = 1 / (los);
+            fTXlosRXn = 2 * pi * f * (los / c);
+            prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
             x = hypot((0.9 * d_max), (2 * ((0.5 * s_max) - s)));
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
@@ -196,7 +198,8 @@ for s = 0:step2:(2 * s_max)
             logprpo2(z) = (10 * log10(absprpo2(z)));
         elseif (s > (0.5 * s_max)) && (s < (s_max))
             los = hypot((0.9 * d_max), (s - (0.5 * s_max)));
-            prpolos = 1 / (los);
+            fTXlosRXn = 2 * pi * f * (los / c);
+            prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
             x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
@@ -205,7 +208,8 @@ for s = 0:step2:(2 * s_max)
             logprpo2(z) = (10 * log10(absprpo2(z)));
         elseif (s < (1.0625 * s_max)) && (s >= (s_max))
             los = hypot((0.9 * d_max), (s - (0.5 * s_max)));
-            prpolos = 1 / (los);
+            fTXlosRXn = 2 * pi * f * (los / c);
+            prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
             x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
