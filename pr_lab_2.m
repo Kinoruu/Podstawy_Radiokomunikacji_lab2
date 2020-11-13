@@ -1,11 +1,12 @@
 %doc zeros;
 clear;
+clear all;
 f = 3.6 * 10^9;               %czêstotliwoœæ
 c = 3 * 10^8;                 %prêdkoœæ œwiat³a
 d_max = 2.8;                  %d³ugoœæ pokoju
 s_max = 2.6;                  %szerokoœæ pokoju
 h_max = 2.6;                  %wysokoœæ pokoju
-step1 = 0.01;                  %krok obliczeñ dla zadania 1
+step1 = 0.005;                  %krok obliczeñ dla zadania 1
 nd = fix(d_max / step1);           %rozmiar tablicy
 ns = fix(s_max / step1);
 step2 = 0.02;                 %krok obliczeñ dla zadania 2
@@ -272,40 +273,65 @@ for s = 0:step1:(s_max)
             x = d;
             fTXlosRXn = 2 * pi * f * (x / c);
             prpolos = (1 / x) ;%* exp(-1i * fTXlosRXn);
-            %x = hypot((0.9 * d_max), s);
-            %fTXpsRXn = 2 * pi * f * (x / c);
-            %prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo3(z,w) = prpolos;% + (2 * prpops);
+            x = hypot(d, s_max);
+            fTXpsRXn = 2 * pi * f * (x / c);
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
+            x = hypot(d, (2 * s_max));
+            fTXpspsRXn = 2 * pi * f * (x / c);
+            prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
+            prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
             absprpo3(z,w) = (abs(prpo3(z,w)))^2;
             logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
-        elseif ((s == (0.5 * s_max)) && (d > 0))
-            x = s;
+        elseif ((s > (0.5 * s_max)) && (d == 0))
+            x = s - (0.5 * s_max);
             fTXlosRXn = 2 * pi * f * (x / c);
             prpolos = (1 / x) ;%* exp(-1i * fTXlosRXn);
-            %x = hypot((0.9 * d_max), s);
-            %fTXpsRXn = 2 * pi * f * (x / c);
-            %prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo3(z,w) = prpolos;% + (2 * prpops);
+            x = hypot(d, s_max);
+            fTXpsRXn = 2 * pi * f * (x / c);
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
+            x = hypot(d, (2 * s_max));
+            fTXpspsRXn = 2 * pi * f * (x / c);
+            prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
+            prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
+            absprpo3(z,w) = (abs(prpo3(z,w)))^2;
+            logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
+        elseif ((s < (0.5 * s_max)) && (d == 0))
+            x = (0.5 * s_max) - s;
+            fTXlosRXn = 2 * pi * f * (x / c);
+            prpolos = (1 / x) ;%* exp(-1i * fTXlosRXn);
+            x = hypot(d, s_max);
+            fTXpsRXn = 2 * pi * f * (x / c);
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
+            x = hypot(d, (2 * s_max));
+            fTXpspsRXn = 2 * pi * f * (x / c);
+            prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
+            prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
             absprpo3(z,w) = (abs(prpo3(z,w)))^2;
             logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
         elseif (s < (0.5 * s_max) && (d > 0))
             los = hypot(d, ((0.5 * s_max) - s));
             fTXlosRXn = 2 * pi * f * (los / c);
             prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-            %x = hypot((0.9 * d_max), (2 * ((0.5 * s_max) - s)));
-            %fTXpsRXn = 2 * pi * f * (x / c);
-            %prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo3(z,w) = prpolos;% + (2 * prpops);
+            x = hypot(d, s_max);
+            fTXpsRXn = 2 * pi * f * (x / c);
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
+            x = hypot(d, (2 * s_max));
+            fTXpspsRXn = 2 * pi * f * (x / c);
+            prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
+            prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
             absprpo3(z,w) = (abs(prpo3(z,w)))^2;
             logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
         elseif ((s > (0.5 * s_max)) && (d > 0))
             los = hypot(d, (s - (0.5 * s_max)));
             fTXlosRXn = 2 * pi * f * (los / c);
             prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-            %x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
-            %fTXpsRXn = 2 * pi * f * (x / c);
-            %prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo3(z,w) = prpolos;% + (2 * prpops);
+            x = hypot(d, s_max);
+            fTXpsRXn = 2 * pi * f * (x / c);
+            prpops = ((a / x) * exp(-1i * fTXpsRXn));
+            x = hypot(d, (2 * s_max));
+            fTXpspsRXn = 2 * pi * f * (x / c);
+            prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
+            prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
             absprpo3(z,w) = (abs(prpo3(z,w)))^2;
             logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
         end
@@ -335,5 +361,5 @@ grid
 grid minor
 title('Wzglêdny spadek mocy dla œcie¿ki LOS')
 xlabel('D³ugoœæ [m]');
-xlabel('Szerokoœæ [m]');
+ylabel('Szerokoœæ [m]');
 zlabel('Moc [dB]');
