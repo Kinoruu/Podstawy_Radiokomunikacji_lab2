@@ -244,8 +244,8 @@ for s = 0:step2:(2 * s_max)
     %absprpo2(z) = (logprpo2(z));
 end
 
-%%%figure
-%%%plot(sx, logprpo2)
+figure
+plot(sx, logprpo2)
 grid
 grid minor
 title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ki powsta³ej na skutek jednego odbicia oraz dla cienia radarowego tylko dla dyfrakcji')
@@ -272,7 +272,7 @@ for s = 0:step1:(s_max)
         if ((s == (0.5 * s_max)) && (d > 0))
             x = d;
             fTXlosRXn = 2 * pi * f * (x / c);
-            prpolos = (1 / x) ;%* exp(-1i * fTXlosRXn);
+            prpolos = (1 / x) * exp(-1i * fTXlosRXn);
             x = hypot(d, s_max);
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
@@ -285,7 +285,7 @@ for s = 0:step1:(s_max)
         elseif ((s > (0.5 * s_max)) && (d == 0))
             x = s - (0.5 * s_max);
             fTXlosRXn = 2 * pi * f * (x / c);
-            prpolos = (1 / x) ;%* exp(-1i * fTXlosRXn);
+            prpolos = (1 / x) * exp(-1i * fTXlosRXn);
             x = hypot(d, s_max);
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
@@ -298,7 +298,7 @@ for s = 0:step1:(s_max)
         elseif ((s < (0.5 * s_max)) && (d == 0))
             x = (0.5 * s_max) - s;
             fTXlosRXn = 2 * pi * f * (x / c);
-            prpolos = (1 / x) ;%* exp(-1i * fTXlosRXn);
+            prpolos = (1 / x) * exp(-1i * fTXlosRXn);
             x = hypot(d, s_max);
             fTXpsRXn = 2 * pi * f * (x / c);
             prpops = ((a / x) * exp(-1i * fTXpsRXn));
