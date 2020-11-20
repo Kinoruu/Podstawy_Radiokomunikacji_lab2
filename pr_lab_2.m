@@ -1,4 +1,3 @@
-%doc zeros;
 clear;
 clear all;
 f = 3.6 * 10^9;               %czêstotliwoœæ
@@ -16,24 +15,36 @@ s3 = [0:step1:s_max];         %zakres dla zadania 3
 d3 = [0:step1:d_max];         %zakres dla zadania 3
 ns3 = [0:step1:10 * s_max];         %zakres dla zadania 3
 nd3 = [0:step1:10 * d_max];         %zakres dla zadania 3
-a = -1;                       %wspó³czynnik odbicia
+a = -0.5;                       %wspó³czynnik odbicia
 h_anten = 1;                  %wysokoœæ anteny
 TXs0 = s_max / 2;             %wspó³rzêdne nadajnika 
 TXd0 = 0;                     %wspó³rzêdne nadajnika
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%  LOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fTXlosRX = 2 * pi * f * (d ./ c);
 
 prpo = (1 ./ d) .* exp(-1i .* fTXlosRX);
-
 prpolos = (abs(prpo)) .^ 2;
-%%%figure
-%%%plot(d, prpolos)
+logprpolos = 10 * log10(prpolos);
+
+% Tau = 1.5 / c;
+% AvgTau = (sum(Tau .* prpolos)) / (sum(prpolos));
+% SquareAvgTau = (sum((Tau .^2) .* (prpolos))) / (sum(prpolos));
+% TauRMS = sqrt((SquareAvgTau) - (AvgTau .^ 2));
+% Bc50 = 1 / (5 .* TauRMS);
+
+figure
+plot(d, prpolos)
+plot(d, logprpolos)
 grid
 grid minor
 title('Wzglêdny spadek mocy dla œcie¿ki LOS')
 xlabel('Odleg³oœæ [m]');
 ylabel('Moc [dB]');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%  Pojedyncze odbicie + LOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dsc = hypot(d, s_max);
 dsu = hypot(d, (2 * (h_max - 1)));
 dpo = hypot (d, (2 * h_anten));
@@ -54,14 +65,16 @@ sumaprpo1 = (abs(prpo + ...
 
 logsumaprpo1 = (10 * log10(sumaprpo1));
 
-%%%figure
-%%%plot(d, logsumaprpo1)
+figure
+plot(d, logsumaprpo1)
 grid
 grid minor
 title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek pojedynczego odbicia')
 xlabel('Odleg³oœæ [m]');
 ylabel('Moc [dB]');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%  Pojedyncze, podówjne odbicie + LOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dscsc = hypot(d, (2 * s_max)); %œciana œciana
 dsupo = hypot(d, (2 * h_max)); %sufit pod³oga / pod³oga sufit
 dscscp = (3 * d_max) - d; % œciana œciana w lini LOS
@@ -80,14 +93,16 @@ sumaprpo2 = (abs(prpo + ...
 
 logsumaprpo2 = (10 * log10(sumaprpo2));
 
-%%%figure
-%%%plot(d, logsumaprpo2)
+figure
+plot(d, logsumaprpo2)
 grid
 grid minor
 title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek pojedynczego oraz podwójnego odbicia')
 xlabel('Odleg³oœæ [m]');
 ylabel('Moc [dB]');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%  Pojedyncze, podówjne i potrójne odbicie + LOS  %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dscscsc = hypot(d, (3 * s_max)); %œciana œciana œciana
 dsuposu = hypot(d, (3 * h_max)); %sufit pod³oga sufit/ pod³oga sufit pod³oga
 dscscscp = (4 * d_max) - d; % œciana œciana œciana w lini LOS
@@ -107,20 +122,22 @@ sumaprpo3 = (abs(prpo + ...
 
 logsumaprpo3 = (10 * log10(sumaprpo3));
 
-%%%figure
-%%%plot(d, logsumaprpo3)
+figure
+plot(d, logsumaprpo3)
 grid
 grid minor
 title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek pojedynczego, podwójnego oraz potrójnego odbicia')
 xlabel('Odleg³oœæ [m]');
 ylabel('Moc [dB]');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%  Wspólny wykres  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%figure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+figure
 hold on
-% % % plot(d, prpolos)
-% % % plot(d, logsumaprpo1)
-% % % plot(d, logsumaprpo2)
-% % % plot(d, logsumaprpo3)
+plot(d, logprpolos)
+plot(d, logsumaprpo1)
+plot(d, logsumaprpo2)
+plot(d, logsumaprpo3)
 grid
 grid minor
 hold off
@@ -128,6 +145,8 @@ title('Porównanie wzglêdnych spadeków mocy dla kolejnych sum œcie¿ek')
 xlabel('Odleg³oœæ [m]');
 ylabel('Moc [dB]');
 legend('LOS','LOS + 1','LOS + 1 + 2','LOS + 1 + 2 + 3')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%   funkcja ogólna dla x odbiæ   %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for n = 0:3
     if n == 0
@@ -172,15 +191,15 @@ abssumaprpo = (abs(sumaprpo)).^2;
 
 logabssumaprpo = (10 * log10(abssumaprpo));
 
-%%%figure
-%%%plot(d, (10 * log10(abssumaprpo)))
+figure
+plot(d, (10 * log10(abssumaprpo)))
 grid
 grid minor
 title(['Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ek powsta³ych na skutek do ', num2str(n) ,' odbiæ'])
 xlabel('Odleg³oœæ [m]');
 ylabel('Moc [dB]');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%      czêœæ druga
+%%%%   czêœæ druga   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 prpo2 = [];
 logprpo2 = [];
@@ -195,40 +214,41 @@ for s = 0:step2:(2 * s_max)
         if s == (0.5 * s_max)
             fTXlosRXn = 2 * pi * f * ((0.9 * d_max) / c);
             prpolos = (1 / (0.9 * d_max)) * exp(-1i * fTXlosRXn);
-            x = hypot((0.9 * d_max), s);
+            x = hypot((0.9 * d_max), (2 * (h_max - h_anten)));
             fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo2(z) = prpolos + (2 * prpops);
+            prpos = ((a / x) * exp(-1i * fTXpsRXn));
+            x = hypot((0.9 * d_max), (2 * h_anten));
+            fTXpsRXn = 2 * pi * f * (x / c);
+            prpop = ((a / x) * exp(-1i * fTXpsRXn));
+            prpo2(z) = prpolos +  prpos + prpop;
             absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
         elseif s < (0.5 * s_max)
             los = hypot((0.9 * d_max), ((0.5 * s_max) - s));
             fTXlosRXn = 2 * pi * f * (los / c);
             prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-            x = hypot((0.9 * d_max), (2 * ((0.5 * s_max) - s)));
-            fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo2(z) = prpolos + (2 * prpops);
+            x = hypot((0.9 * d_max), ((0.5 * s_max) - s));
+            y = hypot(x, (2 * (h_max - h_anten)));
+            fTXpsRXn = 2 * pi * f * (y / c);
+            prpos = ((a / y) * exp(-1i * fTXpsRXn));
+            y = hypot(x, (2 * h_anten));
+            fTXpsRXn = 2 * pi * f * (y / c);
+            prpop = ((a / y) * exp(-1i * fTXpsRXn));
+            prpo2(z) = prpolos + prpos + prpop;
             absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
-        elseif (s > (0.5 * s_max)) && (s < (s_max))
+        elseif ((s > (0.5 * s_max)) && (s < (1.0625 * s_max)))
             los = hypot((0.9 * d_max), (s - (0.5 * s_max)));
             fTXlosRXn = 2 * pi * f * (los / c);
             prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-            x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
-            fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo2(z) = prpolos + (2 * prpops);
-            absprpo2(z) = (abs(prpo2(z)))^2;
-            logprpo2(z) = (10 * log10(absprpo2(z)));
-        elseif ((s < (1.0625 * s_max))) && (s >= (s_max))
-            los = hypot((0.9 * d_max), (s - (0.5 * s_max)));
-            fTXlosRXn = 2 * pi * f * (los / c);
-            prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-            x = hypot((0.9 * d_max), (2 * (s - (0.5 * s_max))));
-            fTXpsRXn = 2 * pi * f * (x / c);
-            prpops = ((a / x) * exp(-1i * fTXpsRXn));
-            prpo2(z) = prpolos + (2 * prpops);
+            x = hypot((0.9 * d_max), (s - (0.5 * s_max)));
+            y = hypot(x, (2 * (h_max - h_anten)));
+            fTXpsRXn = 2 * pi * f * (y / c);
+            prpos = ((a / y) * exp(-1i * fTXpsRXn));
+            y = hypot(x, (2 * h_anten));
+            fTXpsRXn = 2 * pi * f * (y / c);
+            prpop = ((a / y) * exp(-1i * fTXpsRXn));
+            prpo2(z) = prpolos + prpos + prpop;
             absprpo2(z) = (abs(prpo2(z)))^2;
             logprpo2(z) = (10 * log10(absprpo2(z)));
         end
@@ -260,7 +280,8 @@ grid minor
 title('Wzglêdny spadek mocy dla sumy œcie¿ki LOS i œcie¿ki powsta³ej na skutek jednego odbicia oraz dla cienia radarowego tylko dla dyfrakcji')
 xlabel('Szerokoœæ [m]');
 ylabel('Moc [dB]');
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%   czêœæ trzecia   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % for i = 1:ns
 %     for j = 1:nd
@@ -283,16 +304,28 @@ for n = 0 : 3
                 x = d;
                 fTXlosRXn = 2 * pi * f * (x / c);
                 prpolos = (1 / x) * exp(-1i * fTXlosRXn);
+                
                 x = hypot(d, s_max);
                 fTXscRXn = 2 * pi * f * (x / c);
                 prposc = ((a / x) * exp(-1i * fTXscRXn));
-                y = hypot(d, h_max);
+                
+                y = hypot(d, (2 * h_anten));
+                fTXpRXn = 2 * pi * f * (y / c);
+                prpop = ((a / y) * exp(-1i * fTXpRXn));
+                
+                y = hypot(d, (2 * (h_max - h_anten)));
+                fTXsRXn = 2 * pi * f * (y / c);
+                prpos = ((a / y) * exp(-1i * fTXsRXn));
+                
+                x = hypot(d, (2 * s_max));
+                fTXscscRXn = 2 * pi * f * (x / c);
+                prposcsc = (((a * a) / x) * exp(-1i * fTXscscRXn));
+                
+                y = hypot(d, (2 * h_max));
                 fTXpsRXn = 2 * pi * f * (y / c);
                 prpops = ((a / y) * exp(-1i * fTXpsRXn));
-                x = hypot(d, (2 * s_max));
-                fTXpspsRXn = 2 * pi * f * (x / c);
-                prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
-                prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
+                
+                prpo3(z,w) = prpolos + (2 * prposc) + (2 * prposcsc) + prpop + prpos + (2 * prpops);
                 absprpo3(z,w) = (abs(prpo3(z,w)))^2;
                 logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
             elseif ((s > (0.5 * s_max)) && (d == 0))
@@ -312,6 +345,7 @@ for n = 0 : 3
                 x = (0.5 * s_max) - s;
                 fTXlosRXn = 2 * pi * f * (x / c);
                 prpolos = (1 / x) * exp(-1i * fTXlosRXn);
+                
                 x = hypot(d, s_max);
                 fTXpsRXn = 2 * pi * f * (x / c);
                 prpops = ((a / x) * exp(-1i * fTXpsRXn));
@@ -325,26 +359,62 @@ for n = 0 : 3
                 los = hypot(d, ((0.5 * s_max) - s));
                 fTXlosRXn = 2 * pi * f * (los / c);
                 prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-                x = hypot(d, s_max);
-                fTXpsRXn = 2 * pi * f * (x / c);
-                prpops = ((a / x) * exp(-1i * fTXpsRXn));
-                x = hypot(d, (2 * s_max));
-                fTXpspsRXn = 2 * pi * f * (x / c);
-                prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
-                prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
+                
+                x = hypot(d, ((0.5 * s_max) - s));
+                
+                y = hypot(x, (2 * (h_max - h_anten)));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prpos = ((a / y) * exp(-1i * fTXpsRXn));
+                y = hypot(x, (2 * h_anten));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prpop = ((a / y) * exp(-1i * fTXpsRXn));
+                
+                y = hypot(d , (s_max - ((0.5 * s_max) - s)));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prposc = ((a / y) * exp(-1i * fTXpsRXn));
+                
+                y = hypot(d , ((2 * s_max) - ((0.5 * s_max) - s)));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prposcsc = ((a / y) * exp(-1i * fTXpsRXn));
+                
+                y = hypot(x, (2 * h_max));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prposp = (((a * a) / y) * exp(-1i * fTXpsRXn));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prpops = (((a * a) / y) * exp(-1i * fTXpsRXn));
+
+                prpo3(z,w) = prpolos + prpop + prpos + prposp + prpops + (2 * prposc) + (2 * prposcsc);
                 absprpo3(z,w) = (abs(prpo3(z,w)))^2;
                 logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
             elseif ((s > (0.5 * s_max)) && (d > 0))
                 los = hypot(d, (s - (0.5 * s_max)));
                 fTXlosRXn = 2 * pi * f * (los / c);
                 prpolos = (1 / (los)) * exp(-1i * fTXlosRXn);
-                x = hypot(d, s_max);
-                fTXpsRXn = 2 * pi * f * (x / c);
-                prpops = ((a / x) * exp(-1i * fTXpsRXn));
-                x = hypot(d, (2 * s_max));
-                fTXpspsRXn = 2 * pi * f * (x / c);
-                prpopsps = (((a * a) / x) * exp(-1i * fTXpspsRXn));
-                prpo3(z,w) = prpolos + (2 * prpops) + (2 * prpopsps);
+                
+                x = hypot(d, (s - (0.5 * s_max)));
+                
+                y = hypot(x, (2 * (h_max - h_anten)));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prpos = ((a / y) * exp(-1i * fTXpsRXn));
+                y = hypot(x, (2 * h_anten));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prpop = ((a / y) * exp(-1i * fTXpsRXn));
+                
+                y = hypot(d , (s_max - (s - (0.5 * s_max))));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prposc = ((a / y) * exp(-1i * fTXpsRXn));
+                
+                y = hypot(d , ((2 * s_max) - (s - (0.5 * s_max))));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prposcsc = ((a / y) * exp(-1i * fTXpsRXn));
+                
+                y = hypot(x, (2 * h_max));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prposp = (((a * a) / y) * exp(-1i * fTXpsRXn));
+                fTXpsRXn = 2 * pi * f * (y / c);
+                prpops = (((a * a) / y) * exp(-1i * fTXpsRXn));
+                
+                prpo3(z,w) = prpolos + prpop + prpos + prposp + prpops + (2 * prposc) + (2 * prposc);
                 absprpo3(z,w) = (abs(prpo3(z,w)))^2;
                 logprpo3(z,w) = (10 * log10(absprpo3(z,w)));
             end
@@ -368,11 +438,16 @@ for n = 0 : 3
 %plot3([Z W], logprpo3(Z,W))
 %plot([Z, W],logprpo3(Z,W))
 %%%plot(logprpo3)
- figure
- mesh(logprpo3)
-grid
-grid minor
-title('Wzglêdny spadek mocy dla œcie¿ki LOS')
+
+figure
+[X, Y] = meshgrid(d3,s3);
+
+mesh(X, Y,logprpo3)
+xlim([0 d_max])
+ylim([0 s_max])
+colorbar
+
+title('Wzglêdny spadek mocy dla ca³ego pokoju')
 xlabel('D³ugoœæ [m]');
 ylabel('Szerokoœæ [m]');
 zlabel('Moc [dB]');
